@@ -1,0 +1,357 @@
+	.INCLUDE	"global.inc"
+	.EXPORT	MUL8
+	.EXPORT	DIV8, DIVP8
+	.EXPORT	SINL, SINH	
+	.CODE
+
+;**************************************
+;*
+;* 8 BIT MULTIPLY ROUTINE
+;* ACCUM * XREG = ACCUM:XREG
+;*
+;**************************************
+.IF 1
+MUL8:	STX	PROD
+	EOR	#$FF	;INVERT SO NO CLC LATER
+	ASL
+	BCC	MUL8BIT1
+	LDY	#$00
+	STY	PROD
+MUL8BIT1:	ASL	PROD
+	ROL
+	BCS	MUL8BIT2
+	TAY
+	TXA
+	ADC	PROD
+	STA	PROD
+	TYA
+	ADC	#$00
+MUL8BIT2:	ASL	PROD
+	ROL
+	BCS	MUL8BIT3
+	TAY
+	TXA
+	ADC	PROD
+	STA	PROD
+	TYA
+	ADC	#$00
+MUL8BIT3:	ASL	PROD
+	ROL
+	BCS	MUL8BIT4
+	TAY
+	TXA
+	ADC	PROD
+	STA	PROD
+	TYA
+	ADC	#$00
+MUL8BIT4:	ASL	PROD
+	ROL
+	BCS	MUL8BIT5
+	TAY
+	TXA
+	ADC	PROD
+	STA	PROD
+	TYA
+	ADC	#$00
+MUL8BIT5:	ASL	PROD
+	ROL
+	BCS	MUL8BIT6
+	TAY
+	TXA
+	ADC	PROD
+	STA	PROD
+	TYA
+	ADC	#$00
+MUL8BIT6:	ASL	PROD
+	ROL
+	BCS	MUL8BIT7
+	TAY
+	TXA
+	ADC	PROD
+	STA	PROD
+	TYA
+	ADC	#$00
+MUL8BIT7:	ASL	PROD
+	ROL
+	BCS	MUL8EXIT
+	TAY
+	TXA
+	ADC	PROD
+	TAX
+	TYA
+	ADC	#$00
+	RTS
+MUL8EXIT:	LDX	PROD
+	RTS
+.ELSE
+MULIDX	=	$F0
+MULTPLR	=	$F8
+MUL8:	STA	MULTPLR	;HI,LO NIBBLES
+	AND	#$F0
+	STA	MULIDX
+	TXA
+	AND	#$0F
+	STA	MULIDX+1
+	ORA	MULIDX
+	TAY
+	LDA	MULNIBBLES,Y
+	STA	PROD
+	TXA		;LO,HI NIBBLES
+	AND	#$F0
+	STA	MULIDX
+	LDA	MULTPLR
+	AND	#$0F
+	ORA	MULIDX
+	TAY
+	LDA	MULNIBBLES,Y
+	CLC
+	ADC	PROD
+	ROL
+	ROL
+	ROL
+	ROL
+	TAY
+	AND	#$F0
+	STA	PROD
+	TYA
+	ROL
+	AND	#$1F
+	STA	PROD+1
+	LDA	MULTPLR	;LO ORDER NIBBLES
+	ASL
+	ASL
+	ASL
+	ASL
+	ORA	MULIDX+1
+	TAX
+	LDA	MULTPLR	;HI ORDER NIBBLES
+	LSR
+	LSR
+	LSR
+	LSR
+	ORA	MULIDX
+	TAY
+	LDA	MULNIBBLES,X
+	CLC
+	ADC	PROD
+	TAX
+	LDA	MULNIBBLES,Y
+	ADC	PROD+1
+	RTS
+	
+	.DATA
+MULNIBBLES:
+	.BYTE	$00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 
+	.BYTE	$00, $01, $02, $03, $04, $05, $06, $07, $08, $09, $0A, $0B, $0C, $0D, $0E, $0F 
+	.BYTE	$00, $02, $04, $06, $08, $0A, $0C, $0E, $10, $12, $14, $16, $18, $1A, $1C, $1E 
+	.BYTE	$00, $03, $06, $09, $0C, $0F, $12, $15, $18, $1B, $1E, $21, $24, $27, $2A, $2D 
+	.BYTE	$00, $04, $08, $0C, $10, $14, $18, $1C, $20, $24, $28, $2C, $30, $34, $38, $3C 
+	.BYTE	$00, $05, $0A, $0F, $14, $19, $1E, $23, $28, $2D, $32, $37, $3C, $41, $46, $4B 
+	.BYTE	$00, $06, $0C, $12, $18, $1E, $24, $2A, $30, $36, $3C, $42, $48, $4E, $54, $5A 
+	.BYTE	$00, $07, $0E, $15, $1C, $23, $2A, $31, $38, $3F, $46, $4D, $54, $5B, $62, $69 
+	.BYTE	$00, $08, $10, $18, $20, $28, $30, $38, $40, $48, $50, $58, $60, $68, $70, $78 
+	.BYTE	$00, $09, $12, $1B, $24, $2D, $36, $3F, $48, $51, $5A, $63, $6C, $75, $7E, $87 
+	.BYTE	$00, $0A, $14, $1E, $28, $32, $3C, $46, $50, $5A, $64, $6E, $78, $82, $8C, $96 
+	.BYTE	$00, $0B, $16, $21, $2C, $37, $42, $4D, $58, $63, $6E, $79, $84, $8F, $9A, $A5 
+	.BYTE	$00, $0C, $18, $24, $30, $3C, $48, $54, $60, $6C, $78, $84, $90, $9C, $A8, $B4 
+	.BYTE	$00, $0D, $1A, $27, $34, $41, $4E, $5B, $68, $75, $82, $8F, $9C, $A9, $B6, $C3 
+	.BYTE	$00, $0E, $1C, $2A, $38, $46, $54, $62, $70, $7E, $8C, $9A, $A8, $B6, $C4, $D2 
+	.BYTE	$00, $0F, $1E, $2D, $3C, $4B, $5A, $69, $78, $87, $96, $A5, $B4, $C3, $D2, $E1
+
+	.CODE
+.ENDIF
+	
+;**************************************
+;*
+;* 8 BIT DIVIDE ROUTINE
+;* ACCUM / XREG = XREG REM ACCUM
+;*
+;**************************************
+DIV8:	STX	DVSR
+	STA	DVDND
+	LDA	#$00	;QUOTNT >= 1
+	CMP	DVSR
+	BCC	DIV8BIT0
+	SBC	DVSR
+DIV8BIT0:	ROL	DVDND
+	ROL
+	CMP	DVSR
+	BCC	DIV8BIT1
+	SBC	DVSR
+DIV8BIT1:	ROL	DVDND
+	ROL
+	CMP	DVSR
+	BCC	DIV8BIT2
+	SBC	DVSR
+DIV8BIT2:	ROL	DVDND
+	ROL
+	CMP	DVSR
+	BCC	DIV8BIT3
+	SBC	DVSR
+DIV8BIT3:	ROL	DVDND
+	ROL
+	CMP	DVSR
+	BCC	DIV8BIT4
+	SBC	DVSR
+DIV8BIT4:	ROL	DVDND
+	ROL
+	CMP	DVSR
+	BCC	DIV8BIT5
+	SBC	DVSR
+DIV8BIT5:	ROL	DVDND
+	ROL
+	CMP	DVSR
+	BCC	DIV8BIT6
+	SBC	DVSR
+DIV8BIT6:	ROL	DVDND
+	ROL
+	CMP	DVSR
+	BCC	DIV8BIT7
+	SBC	DVSR
+DIV8BIT7:	ROL	DVDND
+	ROL
+	CMP	DVSR
+	BCC	DIV8BIT8
+	SBC	DVSR
+DIV8BIT8:	ROL	DVDND
+;	ROL
+	LDX	DVDND
+	RTS
+
+;**************************************
+;*
+;* 8 BIT FRACTIONAL DIVIDE ROUTINE
+;* ACCUM / XREG = 0.ACCUM
+;* ACCUM < XREG
+;*
+;**************************************
+DIVP8:	STX	DVSR
+	LDX	#$00
+	STX	DVDND
+	ROL
+	BCS	DIVP8SUB0
+	CMP	DVSR
+	BCC	DIVP8BIT1
+DIVP8SUB0:	SBC	DVSR
+	SEC
+DIVP8BIT1:	ROL	DVDND
+	ROL
+	BCS	DIVP8SUB1
+	CMP	DVSR
+	BCC	DIVP8BIT2
+DIVP8SUB1:	SBC	DVSR
+	SEC
+DIVP8BIT2:	ROL	DVDND
+	ROL
+	BCS	DIVP8SUB2
+	CMP	DVSR
+	BCC	DIVP8BIT3
+DIVP8SUB2:	SBC	DVSR
+	SEC
+DIVP8BIT3:	ROL	DVDND
+	ROL
+	BCS	DIVP8SUB3
+	CMP	DVSR
+	BCC	DIVP8BIT4
+DIVP8SUB3:	SBC	DVSR
+	SEC
+DIVP8BIT4:	ROL	DVDND
+	ROL
+	BCS	DIVP8SUB4
+	CMP	DVSR
+	BCC	DIVP8BIT5
+DIVP8SUB4:	SBC	DVSR
+	SEC
+DIVP8BIT5:	ROL	DVDND
+	ROL
+	BCS	DIVP8SUB5
+	CMP	DVSR
+	BCC	DIVP8BIT6
+DIVP8SUB5:	SBC	DVSR
+	SEC
+DIVP8BIT6:	ROL	DVDND
+	ROL
+	BCS	DIVP8SUB6
+	CMP	DVSR
+	BCC	DIVP8BIT7
+DIVP8SUB6:	SBC	DVSR
+	SEC
+DIVP8BIT7:	ROL	DVDND
+	ROL
+	BCS	DIVP8SUB7
+	CMP	DVSR
+	BCC	DIVP8BIT8
+DIVP8SUB7:	SBC	DVSR
+	SEC
+DIVP8BIT8:	LDA	DVDND
+	ROL
+	RTS
+
+	.DATA
+;
+; SIN TABLE
+;
+SINL:	.BYTE	$00, $06, $0C, $12, $19, $1F, $25, $2B
+	.BYTE	$31, $38, $3E, $44, $4A, $50, $56, $5C
+	.BYTE	$61, $67, $6D, $73, $78, $7E, $83, $88
+	.BYTE	$8E, $93, $98, $9D, $A2, $A7, $AB, $B0
+	.BYTE	$B5, $B9, $BD, $C1, $C5, $C9, $CD, $D1
+	.BYTE	$D4, $D8, $DB, $DE, $E1, $E4, $E7, $EA
+	.BYTE	$EC, $EE, $F1, $F3, $F4, $F6, $F8, $F9
+	.BYTE	$FB, $FC, $FD, $FE, $FE, $FF, $FF, $FF
+	.BYTE	$00, $FF, $FF, $FF, $FE, $FE, $FD, $FC
+	.BYTE	$FB, $F9, $F8, $F6, $F4, $F3, $F1, $EE
+	.BYTE	$EC, $EA, $E7, $E4, $E1, $DE, $DB, $D8
+	.BYTE	$D4, $D1, $CD, $C9, $C5, $C1, $BD, $B9
+	.BYTE	$B5, $B0, $AB, $A7, $A2, $9D, $98, $93
+	.BYTE	$8E, $88, $83, $7E, $78, $73, $6D, $67
+	.BYTE	$61, $5C, $56, $50, $4A, $44, $3E, $38
+	.BYTE	$31, $2B, $25, $1F, $19, $12, $0C, $06
+	.BYTE	$00, $FA, $F4, $EE, $E7, $E1, $DB, $D5
+	.BYTE	$CF, $C8, $C2, $BC, $B6, $B0, $AA, $A4
+	.BYTE	$9F, $99, $93, $8D, $88, $82, $7D, $78
+	.BYTE	$72, $6D, $68, $63, $5E, $59, $55, $50
+	.BYTE	$4B, $47, $43, $3F, $3B, $37, $33, $2F
+	.BYTE	$2C, $28, $25, $22, $1F, $1C, $19, $16
+	.BYTE	$14, $12, $0F, $0D, $0C, $0A, $08, $07
+	.BYTE	$05, $04, $03, $02, $02, $01, $01, $01
+	.BYTE	$00, $01, $01, $01, $02, $02, $03, $04
+	.BYTE	$05, $07, $08, $0A, $0C, $0D, $0F, $12
+	.BYTE	$14, $16, $19, $1C, $1F, $22, $25, $28
+	.BYTE	$2C, $2F, $33, $37, $3B, $3F, $43, $47
+	.BYTE	$4B, $50, $55, $59, $5E, $63, $68, $6D
+	.BYTE	$72, $78, $7D, $82, $88, $8D, $93, $99
+	.BYTE	$9F, $A4, $AA, $B0, $B6, $BC, $C2, $C8
+	.BYTE	$CF, $D5, $DB, $E1, $E7, $EE, $F4, $FA
+SINH:	.BYTE	$00, $00, $00, $00, $00, $00, $00, $00
+	.BYTE	$00, $00, $00, $00, $00, $00, $00, $00
+	.BYTE	$00, $00, $00, $00, $00, $00, $00, $00
+	.BYTE	$00, $00, $00, $00, $00, $00, $00, $00
+	.BYTE	$00, $00, $00, $00, $00, $00, $00, $00
+	.BYTE	$00, $00, $00, $00, $00, $00, $00, $00
+	.BYTE	$00, $00, $00, $00, $00, $00, $00, $00
+	.BYTE	$00, $00, $00, $00, $00, $00, $00, $00
+	.BYTE	$01, $00, $00, $00, $00, $00, $00, $00
+	.BYTE	$00, $00, $00, $00, $00, $00, $00, $00
+	.BYTE	$00, $00, $00, $00, $00, $00, $00, $00
+	.BYTE	$00, $00, $00, $00, $00, $00, $00, $00
+	.BYTE	$00, $00, $00, $00, $00, $00, $00, $00
+	.BYTE	$00, $00, $00, $00, $00, $00, $00, $00
+	.BYTE	$00, $00, $00, $00, $00, $00, $00, $00
+	.BYTE	$00, $00, $00, $00, $00, $00, $00, $00
+	.BYTE	$00, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+	.BYTE	$FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+	.BYTE	$FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+	.BYTE	$FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+	.BYTE	$FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+	.BYTE	$FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+	.BYTE	$FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+	.BYTE	$FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+	.BYTE	$FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+	.BYTE	$FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+	.BYTE	$FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+	.BYTE	$FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+	.BYTE	$FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+	.BYTE	$FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+	.BYTE	$FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+	.BYTE	$FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF

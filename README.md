@@ -16,4 +16,6 @@ The 8-Bit Bunch - April 1, 2017
 
 P.S. If you notice keypresses aren’t being recognized, make sure CAPS LOCK is down - there was only upper case on the original Apple ][.
 
-Original Release: ![Original Release](LC3D-DOC.png)
+![Original Release](LC3D-DOC.png)
+Original Release: 
+![Original Release](https://github.com/dschmenk/LightCycles/blob/0176609242ff7cb170c57eeedba61763832353d9/LC3D-DOC.pdf)

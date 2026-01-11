@@ -10,10 +10,10 @@ Here is an unexpected discovery for the 40th anniversary of the launch of the Ap
 
 ![Cassette](https://github.com/dschmenk/LightCycles/blob/0176609242ff7cb170c57eeedba61763832353d9/cassette.jpg)
 
-The binary program  was copied onto a floppy and a simple loader (and updated init screen) was added to show off this gem from a bygone era (available here: https://github.com/dschmenk/LightCycles/raw/master/lightcycles.po). Enjoy what could have been,
+Enjoy what could have been,
 
 The 8-Bit Bunch - April 1, 2017
 
 P.S. If you notice keypresses aren’t being recognized, make sure CAPS LOCK is down - there was only upper case on the original Apple ][.
 
-![Original Release](https://github.com/dschmenk/LightCycles/blob/0176609242ff7cb170c57eeedba61763832353d9/LC3D-DOC.pdf)
+Original Release: ![Original Release](LC3D-DOC.png)

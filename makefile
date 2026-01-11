@@ -1,4 +1,5 @@
-HBCC3D = ESCAPE.OBJ.BIN
+HBCC3D =HBCC/ ESCAPE.OBJ.BIN
+LIGHTCYCLES = LightCycles/LIGHTCYCLES.BIN
 LOFI3D = LOFI3D.SYSTEM.SYS
 #
 # Image filetypes for Virtual ][
@@ -20,31 +21,16 @@ TXTTYPE	= .TXT
 
 #hbcc: $(HBCC)
 
-all: $(HBCC3D) $(LOFI3D)
+all: $(HBCC3D) $(LIGHTCYCLES) $(LOFI3D)
 
 clean:
-	-rm $(HBCC3D) $(LOFI3D) *.o
+	-rm $(HBCC3D) $(LIGHTCYCLES) $(LOFI3D)
 
-main.o: global.inc main.s
-	ca65 main.s
+$(HBCC3D):
+	make -C HBCC
 
-math.o: global.inc math.s
-	ca65 math.s
-
-player.o: global.inc player.s
-	ca65 player.s
-
-raycast.o: global.inc raycast.s
-	ca65 raycast.s
-
-render.o: global.inc render.s
-	ca65 render.s
-
-sfx.o: global.inc sfx.s
-	ca65 sfx.s
-
-$(HBCC3D): main.o math.o player.o raycast.o render.o sfx.o
-	cl65 -C apple2bin.cfg main.o math.o player.o raycast.o render.o sfx.o -o $(HBCC3D)
+$(LIGHTCYCLES):
+	make -C LightCycles
 
 $(LOFI3D): lofi3d.s
 	acme --setpc 0x2000 --outfile $(LOFI3D) lofi3d.s

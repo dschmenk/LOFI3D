@@ -1,0 +1,3 @@
+[submodule "LightCycles"]
+	path = LightCycles
+	url = ../LightCycles

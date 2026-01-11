@@ -20,7 +20,7 @@
                 ESCAPE THE BUILDING AND JOIN STEVE JOBS
                 TO ENSURE YOUR COMPUTER GETS TO MARKET.
 
-## LightCycles 3D 2017 Preface
+## LightCycles
 
 2017 Preface:
 

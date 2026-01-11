@@ -26,6 +26,8 @@
 
 Original Release: 
 
-![Original Release][def]
+![Original Release 1](LC3D-DOC1.png)
 
-[def]: https://github.com/dschmenk/LightCycles/blob/0176609242ff7cb170c57eeedba61763832353d9/LC3D-DOC.pdf
+![Original Release 2](LC3D-DOC2.png)
+
+![Original Release 3](LC3D-DOC3.png)

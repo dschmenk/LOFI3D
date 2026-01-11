@@ -21,7 +21,9 @@
 ## LightCycles 3D 2017 Preface
 
 2017 Preface:
+
 [2017 Preface](LC3D-DOC.png)
 
 Original Release: 
+
 ![Original Release](https://github.com/dschmenk/LightCycles/blob/0176609242ff7cb170c57eeedba61763832353d9/LC3D-DOC.pdf)

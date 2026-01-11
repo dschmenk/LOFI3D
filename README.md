@@ -2,7 +2,7 @@
 
 ![LOFI3D](LOFI3D.gif)
 
-[140K LOFI3D Disk Image](LOFI3D.po)
+[140K LOFI3D Disk Image](https://github.com/dschmenk/LOFI3D/raw/refs/heads/main/LOFI3D.po)
 
 ## Escape from the Homebrew Computer Club
 
